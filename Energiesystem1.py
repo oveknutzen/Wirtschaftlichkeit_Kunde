@@ -5,37 +5,32 @@ import numpy as np
 def Energiesystem(preis_pro_kw, eeg_verguetung, stromkosten,verteuerungsrate,kredit_zinsen,npv_zinsen, anlagen_groesse, stromverbrauch, Batterie, batterie_costs_kwh):
     df_wetterdaten = pd.read_csv("ninja_weather_51_9.csv", sep = ",") # Wetterdaten von renewables.ninja; irradiation in W/m2; wind_speed in m/s
     
-    invest_pv = preis_pro_kw #Investitionskosten für PV in €/kW
-    infeed_rate_pv = eeg_verguetung #Einspeisevergütung PV in €/kWh. Im Netzwerk auf 0 gesetzt, da es für die Berechnung unrelevant ist.
-    lifetime_pv = 19.5 #Lebensdauer PV in Jahren 
+    invest_pv = preis_pro_kw 
+    infeed_rate_pv = eeg_verguetung
+    lifetime_pv = 20
     Nutzungsgrad = 0.86
-    # Installierte Leistung in kWp
+  
     p_nom_pv_south = anlagen_groesse                           
 
-    # Jahresprofil als DF in %
+
     df_pv_gesamt = pd.DataFrame(data = {"pv_south_100": (df_wetterdaten["irradiation"]/1000*Nutzungsgrad)})
-    #Werte für Li-Ion Batterie - Quartierspeichergröße
-    invest_el_storage = (532.31+44.56)*1.17 #Investitionskosten für Speicher in €/kWh
-    standing_loss_el_storage = 0 #Speicherverluste über Zeit
-    lifetime_el_storage = 20 #Lebensdauer des Speichers 
-    efficiency_el_storage = 1 #Ein- und Ausspeichereffizienz liegt bei 100 %.
-    #Haushalte
-    anzahl_H3 = 1 #Mehrpersonenhaushalte
-    verbrauch_H3 = stromverbrauch #kWh Jahresverbrauch je HH
+    invest_el_storage = batterie_costs_kwh
+    standing_loss_el_storage = 0
+    lifetime_el_storage = 19.5 #Lebensdauer des Speichers 
+    efficiency_el_storage = 1 
+    anzahl_H3 = 1
+    verbrauch_H3 = stromverbrauch
 
     df_household_csv = pd.read_csv('Haushaltslastprofile.csv', sep = ';', decimal = '.')
     df_household = df_household_csv.drop(columns=['date']).astype(float)
 
-    # Multiplikation der großen Lastprofile mit der Anzahl der Haushalte
-    # Die Spalte H1, H2 und H3 sind die Lastprofile der Haushaltstypen für das ganze Dorf.
+
 
     df_household['H3'] = df_household['H3'] * anzahl_H3/4959*verbrauch_H3
 
 
-    # Speichern der Lastprofile in einer csv
 
     p_set_HH = df_household['H3']
-    # df_load_profil.head(5)
     network = pypsa.Network()
     network.set_snapshots(range(8760))
 

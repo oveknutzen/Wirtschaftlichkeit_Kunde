@@ -5,9 +5,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from Wirtschaftlichkeit import wirtschaftlichkeitsberechnung
-from sensitivity_analysis import run_sensitivity_analysis  # Importieren der Funktion
+from sensitivity_analysis import run_sensitivity_analysis
 from Energiesystem1 import Energiesystem
-# Funktion für die Wirtschaftlichkeitsberechnung
 # Streamlit App
 
 st.title('Wirtschaftlichkeitsanalyse für Solaranlagen')
@@ -24,7 +23,6 @@ eeg_verguetung = st.number_input('EEG Vergütung pro kWh (€)', value=0.10, for
 batterie_costs_kwh = st.number_input('Batteriekosten pro kWh (€)', value=(532.31+44.56)*1.17)
 Batterie = st.checkbox('Batteriespeicher')
 if st.button("Berechnen"):
-# Berechnung ausführen
 
     
     if Batterie:
@@ -59,18 +57,16 @@ if st.button("Berechnen"):
     st.write(f'LCOE:{ergebnisse["lcoe"]}')
 
 
-    # Tabelle erstellen
-    jahre = list(range(21))  # 0 bis 20 Jahre
+    jahre = list(range(21))  
     df = pd.DataFrame({
         'Jahr': jahre,
-        'Einnahmen (€)': [0] + ergebnisse['cashflows'][1:],  # erstes Jahr ist Investitionsjahr
+        'Einnahmen (€)': [0] + ergebnisse['cashflows'][1:],  
         'Kumulative Gewinne (€)': ergebnisse['kumulative_gewinne']
     })
 
     st.subheader('Jährliche Finanzübersicht')
     st.table(df.style.format("{:.2f}", subset=['Einnahmen (€)', 'Kumulative Gewinne (€)']))
 
-    # Grafik für kumulative Gewinne
     st.subheader('Kumulative Gewinne über 20 Jahre')
     fig, ax = plt.subplots()
     ax.plot(jahre, ergebnisse['kumulative_gewinne'], '-o', color='b', label='Kumulative Gewinne')
@@ -84,20 +80,14 @@ if st.button("Berechnen"):
     st.subheader('Sensitivitätsanalyse Ergebnisse')
     st.subheader('Sensitivitätsanalyse: Prozentuale Änderung der Ausgabewerte')
 
-    # Für jede Metrik (z.B. 'kapitalwert', 'amortisationsjahr', etc.) eine Grafik erstellen
-
     st.subheader('Sensitivitätsanalyse: Prozentuale Änderung der Ausgabewerte')
 
-    # Für jede Metrik (z.B. 'kapitalwert', 'amortisationsjahr', etc.) eine Grafik erstellen
     for metric, deviations_dict in sensitivity_results.items():
         fig, ax = plt.subplots()
 
-        # Setzen der Schriftart für alle Textelemente
         plt.rcParams["font.family"] = "Times New Roman"
 
-        # Daten für das Zeichnen vorbereiten
-        plot_data = {}  # Format: {param_name: ([deviations], [changes])}
-# Zuordnung von internen Variablennamen zu lesbaren Namen für die Anzeige
+        plot_data = {}  
     lesbare_namen = {
     'preis_pro_kw': 'Preis pro kW',
     'anlagen_groesse': 'Anlagengröße',
@@ -113,7 +103,6 @@ if st.button("Berechnen"):
     'batterie_costs_kwh': 'Batteriekosten pro kWh'
 }
 
-# Anpassung der Titel für verschiedene Metriken
     titel_anpassungen = {
     'kapitalwert': 'Sensitivitätsanalyse für die Änderung des Kapitalwerts',
     'interner_zinsfuss': 'Sensitivitätsanalyse für die Änderung des internen Zinsfußes',
@@ -121,45 +110,35 @@ if st.button("Berechnen"):
     'lcoe': 'Levelized cost of Energy'
 }
 
-# ... [Vorheriger Code, der die Daten für die Grafiken vorbereitet] ...
 
     st.subheader('Sensitivitätsanalyse: Prozentuale Änderung der Ausgabewerte')
 
-# Für jede Metrik eine Grafik erstellen
     for metric, deviations_dict in sensitivity_results.items():
         fig, ax = plt.subplots()
 
-        # Setzen der Schriftart für alle Textelemente
         plt.rcParams["font.family"] = "Times New Roman"
 
-        # Daten für das Zeichnen vorbereiten
-        plot_data = {}  # Format: {param_name: ([deviations], [changes])}
+        plot_data = {}  
 
-        # Daten sammeln
         for deviation, param_changes in deviations_dict.items():
-            deviation_value = float(deviation.replace('%', ''))  # Konvertieren in Float für die x-Achse
+            deviation_value = float(deviation.replace('%', ''))  
             for param_name, change_percent in param_changes.items():
                 if param_name not in plot_data:
-                    plot_data[param_name] = ([], [])  # Initialisieren, falls noch nicht vorhanden
+                    plot_data[param_name] = ([], [])  
                 plot_data[param_name][0].append(deviation_value)
                 plot_data[param_name][1].append(change_percent)
 
-    # Linien zeichnen
         for param_name, (deviations, changes) in plot_data.items():
-            lesbare_param_name = lesbare_namen.get(param_name, param_name)  # Holen Sie sich den lesbaren Namen, falls vorhanden
-            ax.plot(deviations, changes, label=lesbare_param_name)  # Linienzeichnung
-
-        # Angepassten Titel setzen
+            lesbare_param_name = lesbare_namen.get(param_name, param_name)  
+            ax.plot(deviations, changes, label=lesbare_param_name)  
         angepasster_titel = titel_anpassungen.get(metric, metric)
         ax.set_title(angepasster_titel)
         ax.set_xlabel('Prozentuale Änderung der Eingabe (%)')
         ax.set_ylabel('Prozentuale Änderung der Ausgabe (%)')
         ax.grid(True)
 
-        # x-Achsenbereich einstellen
-        ax.set_xlim(-10, 10)  # Bereich von -10% bis +10%
+        ax.set_xlim(-10, 10) 
 
-        # Legende unterhalb der Grafik platzieren
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=True, ncol=5)
 
         st.pyplot(fig)
@@ -168,12 +147,10 @@ if st.button("Berechnen"):
     for metric, changes_dict in sensitivity_results.items():
         ten_percent_change[metric] = {}
         for param_name, changes in changes_dict.items():
-            # Sicherstellen, dass "10.0%" ein gültiger Schlüssel in den Ergebnissen ist
             if "10.0%" in changes:
                 ten_percent_change[metric][param_name] = changes["10.0%"]
             else:
-                # Optional: Sie können hier einen Standardwert festlegen, falls "10.0%" nicht vorhanden ist
-                ten_percent_change[metric][param_name] = None  # oder einen anderen Standardwert
+                ten_percent_change[metric][param_name] = None  
 
     for metric, sensitivity_data in sensitivity_results.items():
         st.write(f'Änderungen für {metric}:')
