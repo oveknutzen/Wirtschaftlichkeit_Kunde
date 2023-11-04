@@ -1,0 +1,2 @@
+# Wirtschaftlichkeit_Kunde
+ Wirtschaftlichkeitsberechnung aus Kundenperspektive
