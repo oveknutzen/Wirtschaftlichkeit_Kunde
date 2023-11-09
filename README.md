@@ -4,8 +4,10 @@ Dieses Projekt ermöglicht es, die Wirtschaftlichkeit von Investitionen in Photo
 
 ## Projektbeschreibung
 
-Das Ziel dieses Projekts ist es, Benutzern – insbesondere Kunden im PV-Dachbereich – zu ermöglichen, eine Wirtschaftlichkeitsanalyse für PV-Dachanlagen durchzuführen. Das Programm bewertet Investitionen aus der Sicht des Kunden und erstellt ein entsprechendes Energiesystem, um die Wirtschaftlichkeit zu berechnen.
-
+Das Ziel dieses Projekts ist es, Benutzern – insbesondere Kunden im PV-Dachbereich – zu ermöglichen, eine Wirtschaftlichkeitsanalyse für PV-Dachanlagen durchzuführen. Das Programm bewertet Investitionen aus der Sicht des Kunden und erstellt ein entsprechendes Energiesystem, um die Wirtschaftlichkeit zu berechnen. So kann unabhängig berechnet werden, ob sich eine PV-Anlage lohnt. Nächste Schritte sind:
+- die Optimierung der Batteriegröße im in der Modellierung.
+- Die Einbindung der renewables Ninja API für standortbezogene Wetterdaten
+- Auswahlmöglichkeiten von verschiedenen Lastgängen inklusive opt in von planbaren Verbrauchern wie einem E-Auto oder einer Wärmepumpe
 ## Technologien
 
 - Python
