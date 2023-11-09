@@ -54,6 +54,8 @@ Wenn Sie zum Projekt beitragen möchten, können Sie gerne Pull Requests stellen
 ## Oberfläche
 
 ![Streamlit App Oberfläche](Oberflaeche_Kunde.png)
+![Ergebnisse](Ergebnisse_Wirtschaft1.png)
+![Sensitivität Wirtschaftlichkeit](Wirtscahft_Sens.png)
 
 ## Lizenz
 
